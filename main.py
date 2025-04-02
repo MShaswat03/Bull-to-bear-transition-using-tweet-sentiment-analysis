@@ -22,6 +22,7 @@ def main():
     )
     stocks.to_csv("results/merged_stocks.csv", index=False)
 
+    #testing
     print("📊 Merging all datasets...")
     merge_all()
 
