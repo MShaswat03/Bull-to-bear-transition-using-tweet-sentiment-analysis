@@ -7,7 +7,7 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
 from collections import Counter
-from model import initialize_model, save_model, load_model
+from model_seqbi import initialize_model, save_model, load_model
 
 
 def save_results_to_csv(y_true, y_pred, dates, open_prices, close_prices, companies):

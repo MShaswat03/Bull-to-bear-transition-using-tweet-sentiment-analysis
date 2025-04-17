@@ -2,11 +2,11 @@ from merge_all_script import merge_all
 from eda_analysis import run_feature_engineering
 from train import train_lstm_model
 from process_news import process_news
-from process_tweets_fin import process_tweets
+from process_tweets import process_tweets
 from merge_stocks import merge_stock_data
 def main():
     print("🚀 Processing tweet sentiment...")
-    process_tweets("data/tsla-tweets.csv", "results/daily_tweet_sentiment_fin.csv")
+    process_tweets("data/tsla-tweets.csv", "results/daily_tweet_sentiment.csv")
 
     print("📈 Merging stock data...")
     # Merge multiple stocks into a single dataset
