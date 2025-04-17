@@ -4,10 +4,13 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import numpy as np
 from torch.nn.functional import softmax
+from tqdm import tqdm
+tqdm.pandas()
 
 # Load FinBERT model and tokenizer
 tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
 model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+print("Done loading")
 
 def clean_tweet(text):
     if not isinstance(text, str):
@@ -17,13 +20,17 @@ def clean_tweet(text):
     text = re.sub(r"[^a-zA-Z\s]", "", text)
     return text.lower().strip()
 
-def get_finbert_sentiment(text):
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    probs = softmax(outputs.logits, dim=-1).detach().numpy()[0]
-    sentiment_score = probs[2] - probs[0]  # positive - negative
-    return sentiment_score
+def batch_get_finbert_sentiment(text_list, batch_size=32):
+    results = []
+    for i in tqdm(range(0, len(text_list), batch_size)):
+        batch = text_list[i:i+batch_size]
+        encodings = tokenizer(batch, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        with torch.no_grad():
+            outputs = model(**encodings)
+        probs = softmax(outputs.logits, dim=-1).detach().numpy()
+        scores = probs[:, 2] - probs[:, 0]  # positive - negative
+        results.extend(scores)
+    return results
 
 def process_tweets(input_filepath, output_filepath, text_column="tweet"):
     """
@@ -39,7 +46,7 @@ def process_tweets(input_filepath, output_filepath, text_column="tweet"):
         df["Cleaned_Tweet"] = df[text_column].apply(clean_tweet)
     except KeyError:
         raise KeyError(f"The specified column '{text_column}' was not found in the tweets CSV. Please check your CSV file.")
-    df["Tweet_Sentiment"] = df["Cleaned_Tweet"].apply(get_finbert_sentiment)
+    df["Tweet_Sentiment"] = df["Cleaned_Tweet"].progress_apply(batch_get_finbert_sentiment)
     
     # Convert date column; assuming the date column is named "Date". Change if necessary.
     df["date"] = pd.to_datetime(df["date"])

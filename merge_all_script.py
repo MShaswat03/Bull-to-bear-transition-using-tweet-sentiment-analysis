@@ -4,7 +4,7 @@ import os
 
 def merge_all():
     stocks = pd.read_csv("results/merged_stocks.csv")
-    tweet_sent = pd.read_csv("results/daily_tweet_sentiment.csv")
+    tweet_sent = pd.read_csv("results/daily_tweet_sentiment_fin.csv")
     news_sent = pd.read_csv("results/daily_news_sentiment.csv")
     inflation = pd.read_csv("data/US_inflation_rates.csv")
 
