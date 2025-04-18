@@ -7,7 +7,7 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
 from collections import Counter
-from model import initialize_model, save_model, load_model
+from model_seqbi import initialize_model, save_model, load_model
 
 
 def save_results_to_csv(y_true, y_pred, dates, open_prices, close_prices, companies):
@@ -32,7 +32,8 @@ def train_lstm_model(
     num_epochs=50,
     patience=10,
     learning_rate=0.001,
-    model_save_path="results/best_model.pth"
+    model_save_path="results/best_model.pth",
+    model_type="lstm"
 ):
     # --- Load Data ---
     df = pd.read_csv(csv_file)
