@@ -32,7 +32,8 @@ def train_lstm_model(
     num_epochs=50,
     patience=10,
     learning_rate=0.001,
-    model_save_path="results/best_model.pth"
+    model_save_path="results/best_model.pth",
+    model_type="lstm"
 ):
     # --- Load Data ---
     df = pd.read_csv(csv_file)
