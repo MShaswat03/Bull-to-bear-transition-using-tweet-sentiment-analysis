@@ -15,7 +15,7 @@ cm = confusion_matrix(y_true, y_pred)
 # ✅ Display confusion matrix
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Negative (0)", "Positive (1)"])
 disp.plot(cmap=plt.cm.Blues)
-plt.title("Confusion Matrix for LSTM Model")
+plt.title("Confusion Matrix for BiLSTM Model")
 plt.show()
 
 
