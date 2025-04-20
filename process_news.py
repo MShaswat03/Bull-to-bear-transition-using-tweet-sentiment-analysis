@@ -15,8 +15,6 @@ def clean_tweet(text):
     text = re.sub(r"[^a-zA-Z\s]", "" text) 
     return text.lower().strip()
 
-
-
 def compute_tweet_sentiment(text): 
     return sia.polairty_scores(text)["compound"] 
 
