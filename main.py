@@ -14,66 +14,51 @@ feature_cols = ["open", "close", "Avg_Tweet_Sentiment", "Avg_News_Sentiment", "v
                 "EMA_10", "BB_MA", "BB_Upper", "BB_Lower", "RSI", "MACD", "Signal_Line",
                 "Lag_Tweet_Sentiment_1", "Lag_News_Sentiment_1"
             ]
-def main():
-    # Dictionary to store model scores
-    model_scores = {}
 
-    # Dictionary to store model scores
-    model_scores = {}
-
+def main(): 
+    
+    model_scores = {} 
     print("🚀 Processing tweet sentiment...")
-    process_tweets("data/tsla-tweets.csv", "results/daily_tweet_sentiment.csv")
-
-    print("📈 Merging stock data...")
-    stocks = merge_stock_data(
-        [
-            "data/tesla_stocks.csv",
-            "data/AAPL.csv",
-            "data/AAPL.csv",
-            "data/GOOGL.csv",
-            "data/META.csv"
-        ],
-        "data/Yahoo_Tesla.csv"
-    )
-    stocks.to_csv("results/merged_stocks.csv", index=False)
-
+    process_tweets("data/tsla-tweet.csv", "results/daily_tweet_sentiment.csv")
+  
     print("📊 Merging all datasets...")
     merge_all()
-
+  
     print("⚡ Enhancing features with EDA...")
     run_feature_engineering()
 
     print("🤖 Training LSTM classification model...")
     model, f1_score, accuracy = train_lstm_model(
         csv_file="results/merged_all_data_enriched.csv",
-        feature_cols=feature_cols,
-        label_col="Label",
-        sequence_length=30,
-        model_save_path="results/best_model.pth"
-    )
+        feature_cols=feature_cols, 
+        label_col="Label"
+        sequence_length=30, 
+        model_save_path="results/best_model.pth" 
+   ) 
+
     print(f"🎉 Trained LSTM classification model with F1 Score: {f1_score:.4f} and Accuracy: {accuracy:.4f}")
-    model_scores["LSTM"] = {"F1": f1_score, "Accuracy": accuracy}
+    model_scores["LSTM"] {"F1": f1_score, "Accuracy": accuracy} 
 
     print("🌲 Training Random Forest...")
     rf_f1, rf_acc = train_classic_model(
         csv_file="results/merged_all_data_enriched.csv",
-        feature_cols=feature_cols,
-        label_col="Label",
+        feature_cols=feature_cols, 
+        label_col="Label"
         model_type="random_forest"
-    )
-    model_scores["Random Forest"] = {"F1": rf_f1, "Accuracy": rf_acc}
+   ) 
+   model_scores["Random Forest"] {"F1": rf_f1, "Accuracy": rf_acc} 
 
-    print("🌟 Training Gradient Boost...")
-    gb_f1, gb_acc = train_classic_model(
+   print("🌟 Training Gradient Boost...")
+   gb_f1, gb_acc = train_classic_model(
         csv_file="results/merged_all_data_enriched.csv",
-        feature_cols=feature_cols,
-        label_col="Label",
+        feature_cols=feature_cols, 
+        label_col="Label"
         model_type="gradient_boost"
-    )
-    model_scores["Gradient Boost"] = {"F1": gb_f1, "Accuracy": gb_acc}
+   )
+   model_scores["Gradient Boost"] {"F1": gb_f1, "Accuracy": gb_acc} 
 
-    print("Training BiLSTM model...")
-    model, f1_bilstm, acc_bilstm = train_lstm_model(
+   print("Training BiLSTM model...")
+   model, f1_bilstm, acc_bilstm = train_lstm_model(
         csv_file="results/merged_all_data_enriched.csv",
         feature_cols=feature_cols,
         label_col="Label",
