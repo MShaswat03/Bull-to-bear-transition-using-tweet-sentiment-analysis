@@ -1,37 +1,36 @@
-import torch
+import torch 
 import torch.nn as nn
 
-# ------------------------
-# Attention Module
-# ------------------------
-class Attention(nn.Module):
+class Attention(nn.Module): 
     def __init__(self, hidden_size):
-        super().__init__()
-        self.attention = nn.Linear(hidden_size, 1)
+        supe().__init___()
+        self.attention = nn.Linear(hidden_size, 1) 
 
-    def forward(self, lstm_output):
-        attn_weights = torch.softmax(self.attention(lstm_output), dim=1)
-        attn_output = torch.sum(attn_weights * lstm_output, dim=1)
+    def forward(self, lstm_output): 
+        attn_weights = torch.softmax(self.attention(lstm_output), dim=1) 
+        attn_output = torch.sum(attn_weights * lstm_output, dim=1) 
         return attn_output
 
+
 # ------------------------
-# LSTM Classifier
+# lSTM Classifier
 # ------------------------
-class LSTMClassifier(nn.Module):
+
+class LSTMClassifier(nn.Module): 
     def __init__(self, input_size, hidden_size, num_layers, num_classes, dropout=0.3, use_attention=True):
         super().__init__()
-        self.use_attention = use_attention
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True,
-                            dropout=dropout if num_layers > 1 else 0)
-        if use_attention:
-            self.attention = Attention(hidden_size)
-        self.fc = nn.Linear(hidden_size, num_classes)
+        self.use_attention = use_attention 
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, dropout=dropout if num_layers > 1 else 0) 
 
-    def forward(self, x):
-        lstm_out, _ = self.lstm(x)
-        if self.use_attention:
-            out = self.attention(lstm_out)
-        else:
+        if use_attention: 
+            self.attention = Attention(hidden_size) 
+        self.fc = nn.Linear(hidden_size, num_classes) 
+
+    def forward(self, x): 
+        lstm_out, _ = self.lstm(x) 
+        if self.use_attention: 
+            out = self.attention(lstm_output) 
+        else: 
             out = lstm_out[:, -1, :]
         return self.fc(out)
 
